@@ -20,7 +20,7 @@ public class Automaton
     public Automaton(int numberOfCells)
     {
         this.numberOfCells = numberOfCells;
-        state = new int[numberOfCells];
+        state = new int[numberOfCells+1];
         // Seed the automaton with a single 'on' cell in the middle.
         state[numberOfCells / 2] = 1;
     }
@@ -46,37 +46,31 @@ public class Automaton
      */
     public void update()
     {
-        // Build the new state in a separate array.
+        // Build the new state in a separate array. #6 #9 #12
         int[] nextState = new int[state.length];
+        int left = 0;
+        int center = state[0];
         // Naively update the state of each cell
         // based on the state of its two neighbors.
-        for(int i = 0; i < state.length; i++) {
-            int left, center, right;
-            if(i == 0) {
-                left = 0;
-            }
-            else {
-                left = state[i - 1];
-            }
-            center = state[i];
-            if(i + 1 < state.length) {
-                right = state[i + 1];
-            }
-            else {
-                right = 0;
-            }
-            nextState[i] = (left + center + right) % 2;
+        for(int i = 0; i < numberOfCells; i++) {
+            int right = state[i+1];
+            nextState[i] = calculationNextState(left, center, right);
+            left = center;
+            center = right;
         }
         state = nextState;
     }
-    
+    // #10 #11
+    private int calculationNextState(int left,int center, int right){
+    return (center+left*right+left)%2;
+    }
     /**
      * Reset the automaton.
      */
     public void reset()
     {
         Arrays.fill(state, 0);
-        // Seed the automaton with a single 'on' cell.
+        // Seed the automaton with a single 'on' cell. #5
         state[numberOfCells / 2] = 1;
     }
 }
